@@ -1,7 +1,13 @@
 package de.feedhelfer.app.utils;
 
+import de.feedhelfer.app.entity.RSSFeed;
+import de.feedhelfer.app.parser.Parser;
+import de.feedhelfer.app.repository.FeedRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.w3c.dom.Document;
@@ -16,6 +22,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by cernota on 22.12.15.
@@ -23,28 +30,27 @@ import java.net.URL;
 @Controller
 public class Scheduler {
     Logger log = LoggerFactory.getLogger(Scheduler.class);
+
+    @Autowired
+    FeedRepository feedRepository;
+
+    @Autowired
+    ApplicationContext ctx;
     @Scheduled(fixedDelay = 60000)
     public void run(){
         log.info("HallO");
 
-        try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(new URL("http://www.konz.eu/vg_konz/Facebook/rss.xml").openStream());
-            //optional, but recommended
-            //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-            doc.getDocumentElement().normalize();
-            log.info(doc.getDocumentElement().getNodeName());
-            if (doc.hasChildNodes()) {
-                NodeList guids = doc.getElementsByTagName("guid");
-                for(int i = 0; i < 6; i++){
-                    log.info(guids.item(i).getTextContent());
-                }
-            }
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        List<RSSFeed> rssFeeds = feedRepository.findAll();
+        System.out.println(rssFeeds.size());
+        for(RSSFeed feed : rssFeeds){
+            System.out.println(feed.getUrl());
+
+            Parser parser = (Parser) ctx.getBean("parser");
+            parser.setRssFeed(feed);
+            parser.start();
         }
+
 
     }
 
