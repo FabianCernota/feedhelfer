@@ -1,0 +1,23 @@
+
+<md-data-table-container>
+    <table md-data-table md-progress="deferred">
+        <thead md-order="query.order" md-trigger="onOrderChange">
+        <tr>
+            <th numeric name="ID" order-by="feeds.id.value"></th>
+            <th numeric name="URL" order-by="feeds.url.value"></th>
+            <th numeric name="Status" order-by="calcium.value"></th>
+            <th numeric name="Zuletzt eingelesen"></th>
+            <th numeric name="Edit"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr md-auto-select ng-repeat="feed in feeds">
+            <td>{{feed.id}}</td>
+            <td>{{feed.url}}</td>
+            <td>Hallo</td>
+            <td>{{feed.lastread}}</td>
+            <td>OK</td>
+        </tr>
+        </tbody>
+    </table>
+</md-data-table-container>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de" ng-app="feedhelfer">
+<head>
+    <title>Feedhelfer - RSS to Facebook</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+<!--    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>-->
+    <link rel="stylesheet" href="css/angular-material.min.css"/>
+    <!-- style sheet -->
+    <link href="bower_components/angular-material-data-table/dist/md-data-table.min.css" rel="stylesheet" type="text/css"/>
+
+
+    <style type="text/css">
+        /**
+         * Hide when Angular is not yet loaded and initialized
+         */
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+    </style>
+
+</head>
+
+<body layout="row" ng-cloak >
+
+
+<div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2">
+    <md-toolbar>
+        <md-menu-bar>
+            <md-menu>
+                <button ng-click="$mdOpenMenu()">
+                    File
+                </button>
+                <md-menu-content>
+                    <md-menu-item>
+                        <md-button ng-click="ctrl.sampleAction('share', $event)">
+                            Share...
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-divider></md-menu-divider>
+                    <md-menu-item>
+                        <md-menu-item>
+                            <md-menu>
+                                <md-button ng-click="$mdOpenMenu()">New</md-button>
+                                <md-menu-content>
+                                    <md-menu-item><md-button ng-click="ctrl.sampleAction('New Document', $event)">Document</md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="ctrl.sampleAction('New Spreadsheet', $event)">Spreadsheet</md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="ctrl.sampleAction('New Presentation', $event)">Presentation</md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="ctrl.sampleAction('New Form', $event)">Form</md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="ctrl.sampleAction('New Drawing', $event)">Drawing</md-button></md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+                    </md-menu-item></md-menu-content>
+            </md-menu>
+        </md-menu-bar>
+    </md-toolbar>
+
+
+    <md-content flex id="content">
+        <ng-view></ng-view>
+    </md-content>
+
+</div>
+
+<script src="js/angular.min.js"></script>
+<script src="js/angular-animate.min.js"></script>
+<script src="js/angular-aria.min.js"></script>
+<script type="text/javascript" src="js/angular-material.min.js"></script>
+<script src="js/angular-route.min.js"></script>
+<!-- module -->
+<script type="text/javascript" src="bower_components/angular-material-data-table/dist/md-data-table.min.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

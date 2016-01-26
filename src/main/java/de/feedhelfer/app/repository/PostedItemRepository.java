@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PostedItemRepository extends JpaRepository<PostedItem, Long>{
+    public PostedItem findByGuid(String guid);
 }

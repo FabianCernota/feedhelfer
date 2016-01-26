@@ -1,7 +1,8 @@
 package de.feedhelfer.app.parser;
 
 import de.feedhelfer.app.entity.PostedItem;
-import de.feedhelfer.app.entity.RSSFeed;
+import de.feedhelfer.app.entity.Feed;
+import de.feedhelfer.app.facebook.FacebookWrapper;
 import de.feedhelfer.app.repository.FeedRepository;
 import de.feedhelfer.app.repository.PostedItemRepository;
 import org.jdom.Document;
@@ -28,41 +29,54 @@ public class Parser extends Thread{
     FeedRepository feedRepository;
 
     Logger log = LoggerFactory.getLogger(Parser.class);
-    private RSSFeed rssFeed;
+    private Feed feed;
     public Parser(){
 
     }
     @Override
     public void run() {
 
-        RSSLoader rssLoader = new RSSLoader(rssFeed.getUrl());
+        RSSLoader rssLoader = new RSSLoader(feed.getUrl());
 
         Document doc = rssLoader.getDoc();
 
         List<Element> items = doc.getRootElement().getChild("channel").getChildren("item");
         for(Element e : items){
-            if(rssFeed.getLastread() != null){
+            if(feed.getLastread() != null){
+                PostedItem poi = postedItemRepository.findByGuid(e.getChild("guid").getText());
+                if(poi == null){
+                    log.info("Posting: " + e.getChild("guid").getText());
 
+                    FacebookWrapper fb = new FacebookWrapper();
+
+                    PostedItem postedItem = new PostedItem();
+                    postedItem.setId_feed(feed.getId());
+                    postedItem.setGuid(e.getChild("guid").getText());
+                    postedItemRepository.save(postedItem);
+                    postedItemRepository.flush();
+                }
             }else{
                 PostedItem postedItem = new PostedItem();
-                postedItem.setId_feed(rssFeed.getId());
+                postedItem.setId_feed(feed.getId());
                 postedItem.setGuid(e.getChild("guid").getText());
                 postedItemRepository.save(postedItem);
                 postedItemRepository.flush();
             }
 
 
+
+
         }
 
-        rssFeed.setLastread(new Timestamp(System.currentTimeMillis()).toString());
-        feedRepository.updateLastread(new Timestamp(System.currentTimeMillis()).toString(), rssFeed.getId());
+        feed.setLastread(new Timestamp(System.currentTimeMillis()).toString());
+        feedRepository.save(feed);
     }
 
-    public RSSFeed getRssFeed() {
-        return rssFeed;
+    public Feed getFeed() {
+        return feed;
     }
 
-    public void setRssFeed(RSSFeed rssFeed) {
-        this.rssFeed = rssFeed;
+    public void setFeed(Feed feed) {
+        this.feed = feed;
     }
 }
